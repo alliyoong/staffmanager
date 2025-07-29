@@ -1,0 +1,18 @@
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+application:
+  name: staffmanager
+  title: Manage cool people
+  version: 1.0
+
+server:
+  port: 8088
+#  error:
+#    whitelabel:
+#      enabled: false
+
+logging:
+  level:
+    root: INFO
