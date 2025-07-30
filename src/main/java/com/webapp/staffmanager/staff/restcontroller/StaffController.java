@@ -1,8 +1,11 @@
 package com.webapp.staffmanager.staff.restcontroller;
 
+import java.util.Locale;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
+
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,62 +28,38 @@ import lombok.RequiredArgsConstructor;
 public class StaffController {
     private final StaffService service;
 
+    @GetMapping("/hello")
+    public HttpResponse hello() {
+        return HttpResponse.ok(service.translate(Locale.of("vn")));
+    }
     @GetMapping()
-    public ResponseEntity<HttpResponse> getList() {
+    public HttpResponse getList() {
         var data = service.getStaffList();
-        return ResponseEntity.ok(HttpResponse.builder()
-        .httpStatus(OK)
-        .httpStatusCode(OK.value())
-        .data(Map.of("staffList",data))
-        .build());
+        return HttpResponse.ok(data);
     }
     @GetMapping("/{staffName}")
-    public ResponseEntity<HttpResponse> search(@PathVariable("staffName") String staffName) {
+    public HttpResponse search(@PathVariable("staffName") String staffName) {
         var result = service.searchStaff(staffName);
-        return ResponseEntity.ok(
-                HttpResponse.builder()
-                        .httpStatus(OK)
-                        .httpStatusCode(OK.value())
-                        .data(Map.of("staff", result))
-                        .build()
-        );
+        return HttpResponse.ok(result);
     }
 
     @PostMapping()
-    public ResponseEntity<HttpResponse> add(@RequestBody StaffAddRequestDto data) {
+    public HttpResponse add(@RequestBody StaffAddRequestDto data) {
         service.addStaff(data);
-        return ResponseEntity.ok(
-                HttpResponse.builder()
-                        .httpStatusCode(CREATED.value())
-                        .httpStatus(CREATED)
-                        .message("Staff has been added successfully")
-                        .build()
-        );
+        return HttpResponse.created();
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<HttpResponse> edit(@PathVariable("id") int id, 
-                                            @RequestBody StaffAddRequestDto data) {
+    public HttpResponse edit(@PathVariable("id") int id, 
+                            @RequestBody StaffAddRequestDto data) {
         service.editStaff(id, data);
-        return ResponseEntity.ok(
-                HttpResponse.builder()
-                        .httpStatusCode(CREATED.value())
-                        .httpStatus(CREATED)
-                        .message("Staff has been updated successfully")
-                        .build()
-        );
+        return HttpResponse.created();
     }
 
     @DeleteMapping ("/{id}")
-    public ResponseEntity<HttpResponse> deleteAccount(@PathVariable int id) {
+    public HttpResponse deleteAccount(@PathVariable int id) {
         service.deleteStaff(id);
-        return ResponseEntity.ok(
-                HttpResponse.builder()
-                        .httpStatusCode(NO_CONTENT.value())
-                        .httpStatus(NO_CONTENT)
-                        .message("Staff successfully deleted.")
-                        .build()
-        );
+        return HttpResponse.noContent();
     }
 
 

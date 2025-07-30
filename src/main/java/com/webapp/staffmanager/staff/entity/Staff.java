@@ -12,7 +12,6 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public abstract class Staff {
-    @JsonProperty("id")
     protected int id;
 
     @JsonProperty("name")

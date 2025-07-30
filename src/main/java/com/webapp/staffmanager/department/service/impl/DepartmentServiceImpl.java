@@ -1,6 +1,5 @@
 package com.webapp.staffmanager.department.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -8,12 +7,19 @@ import org.springframework.stereotype.Service;
 
 import com.webapp.staffmanager.department.entity.Department;
 import com.webapp.staffmanager.department.entity.dto.DepartmentAddRequestDto;
+import com.webapp.staffmanager.department.repository.DepartmentRepository;
 import com.webapp.staffmanager.department.service.DepartmentService;
+import com.webapp.staffmanager.exception.GeneralException;
+import com.webapp.staffmanager.exception.ResourceAlreadyInUseException;
 import com.webapp.staffmanager.exception.ResourceNotFoundException;
+import com.webapp.staffmanager.staff.entity.Staff;
+import com.webapp.staffmanager.staff.repository.StaffRepository;
+import static com.webapp.staffmanager.constant.AppResponseStatus.*;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService { 
-    private final List<Department> deptList = new ArrayList<>();
+    private final List<Department> deptList = DepartmentRepository.deptList;
+    private final List<Staff> staffList = StaffRepository.staffList;
     public static int staticDeptId = 0;
 
     public DepartmentServiceImpl() {
@@ -34,22 +40,19 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void deleteDepartment(int id) {
         isDeptListEmpty();
-
         Optional<Department> toDelete = deptList.stream()
                 .filter(s -> s.getDepartmentId() == id)
                 .findFirst();
         if (toDelete.isEmpty()) {
-            throw new ResourceNotFoundException("department", "id", id);
+            throw new GeneralException(APP_404_DEPT);
         } 
-        //todo -- prevent deleting department with staff
-        // else {
-            // if (staffList.stream()
-                    // .mapToInt(s -> s.getDepartmentId())
-                    // .anyMatch(s -> toDelete.get().getDepartmentId() == s)) {
-                // printMessage(FAILURE, "Cannot delete this department because it's not empty");
-                // return;
-            // }
-        // }
+        else {
+            if (staffList.stream()
+                    .mapToInt(s -> s.getDepartmentId())
+                    .anyMatch(s -> toDelete.get().getDepartmentId() == s)) {
+                throw new GeneralException(APP_404_STAFF_LIST);
+            }
+        }
 
         deptList.remove(toDelete.get());
     }
@@ -62,7 +65,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                 .filter(s -> s.getDepartmentId() == id)
                 .findFirst();
         if (toEdit.isEmpty()) {
-            throw new ResourceNotFoundException("department", "id", id);
+            throw new GeneralException(APP_404_DEPT);
         }
         int toEditIndex = deptList.indexOf(toEdit.get());
         Department toAdd = new Department(id, dto.name(), dto.description());
@@ -80,7 +83,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     
     private void isDeptListEmpty(){
         if (deptList.isEmpty()) {
-            throw new RuntimeException("Department list is empty");
+            throw new GeneralException(APP_404_DEPT_LIST);
         }
     }
 }

@@ -3,6 +3,7 @@ spring:
     ansi:
       enabled: ALWAYS
 application:
+  defaultLocale: en
   name: staffmanager
   title: Manage cool people
   version: 1.0
