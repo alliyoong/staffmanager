@@ -1,10 +1,20 @@
 package com.webapp.staffmanager.util;
 
-import org.springframework.stereotype.Service;
-
 // @Service
 public class TranslatorService {
+
+    private static TranslatorService instance;
+    private TranslatorService() {}
+
+    public static TranslatorService getInstance() {
+        if (instance == null) {
+            instance = new TranslatorService();
+        }
+        return instance;
+    }
+
     public String translate(String message){
         return Translator.toLocale(message);
     }
+
 }

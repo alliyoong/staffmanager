@@ -18,7 +18,7 @@ public class HttpResponse<T> {
     private String statusCode;
     private String statusMessage;
     private T data;
-    private static final TranslatorService service = new TranslatorService();
+    private static final TranslatorService service = TranslatorService.getInstance();
 
     private HttpResponse(AppResponseStatus status, T data) {
         this.timeStamp = LocalDateTime.now();
