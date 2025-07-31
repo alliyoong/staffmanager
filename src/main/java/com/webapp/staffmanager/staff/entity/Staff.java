@@ -1,5 +1,7 @@
 package com.webapp.staffmanager.staff.entity;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.webapp.staffmanager.util.Gender;
 import com.webapp.staffmanager.util.StaffType;
@@ -30,4 +32,39 @@ public abstract class Staff {
     protected int departmentId;
 
     public abstract void doWork();
+    
+    @Getter
+    public static class InternStaffBuilder{
+        private int id;
+        private String name;
+        private int age;
+        private Gender gender;
+        private StaffType type;
+        private int departmentId;
+        private int duration;
+        private BigDecimal salary;
+
+        public InternStaffBuilder(int id, String name, StaffType type, int departmentId, int duration){
+            this.id = id;
+            this.name = name;
+            this.type = type;
+            this.departmentId = departmentId;
+            this.duration = duration;
+            this.salary = BigDecimal.valueOf(0);
+        }
+        
+        public InternStaffBuilder gender(Gender gender){
+            this.gender = gender;
+            return this;
+        }
+
+        public InternStaffBuilder age(int age){
+            this.age = age;
+            return this;
+        }
+        
+        public InternStaff build(){
+            return new InternStaff(this);
+        }
+    }
 }

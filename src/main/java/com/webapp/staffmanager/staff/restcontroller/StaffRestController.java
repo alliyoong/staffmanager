@@ -21,13 +21,6 @@ import lombok.RequiredArgsConstructor;
 public class StaffRestController {
     private final StaffService service;
 
-    // @GetMapping("/hello")
-    // public HttpResponse hello(){
-    //     return HttpResponse.ok(tranService.translate("WELCOME"));
-    // }
-    // public HttpResponse hello() {
-    //     return HttpResponse.ok(service.translate(Locale.of("vn")));
-    // }
     @GetMapping()
     public HttpResponse getList() {
         var data = service.getStaffList();

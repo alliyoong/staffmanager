@@ -39,7 +39,12 @@ public class StaffServiceImpl implements StaffService{
         Staff toAdd;
         isDepartmentExist(dto.departmentId());
         if (dto.type().equals(StaffType.INTERN)) {
-            toAdd = new InternStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.duration(), dto.gender(), dto.departmentId());
+            // toAdd = new InternStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.duration(), dto.gender(), dto.departmentId());
+            toAdd = new Staff
+                    .InternStaffBuilder(++staticStaffId, dto.name(),dto.type(), dto.departmentId(), dto.duration())
+                    .age(dto.age())
+                    .gender(dto.gender())
+                    .build();
         } else {
             toAdd = new FulltimeStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.salary(), dto.gender(), dto.departmentId());
         }

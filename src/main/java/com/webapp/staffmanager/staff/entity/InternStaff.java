@@ -18,6 +18,16 @@ public class InternStaff extends Staff{
         this.internDuration = internDuration;
     }
 
+    public InternStaff(InternStaffBuilder builder) {
+        this.id = builder.getId();
+        this.type = builder.getType();
+        this.age = builder.getAge();
+        this.name = builder.getName();
+        this.gender = builder.getGender();
+        this.departmentId = builder.getDepartmentId();
+        this.internDuration = builder.getDuration();
+    }
+
     public int getInternDuration() {
         return internDuration;
     }
