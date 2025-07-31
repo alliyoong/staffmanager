@@ -1,11 +1,10 @@
 package com.webapp.staffmanager.staff.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import com.webapp.staffmanager.department.entity.Department;
@@ -15,6 +14,7 @@ import com.webapp.staffmanager.staff.entity.FulltimeStaff;
 import com.webapp.staffmanager.staff.entity.InternStaff;
 import com.webapp.staffmanager.staff.entity.Staff;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
+import com.webapp.staffmanager.staff.entity.dto.StaffDetailDto;
 import com.webapp.staffmanager.staff.repository.StaffRepository;
 import com.webapp.staffmanager.staff.service.StaffService;
 import com.webapp.staffmanager.util.StaffType;
@@ -108,5 +108,39 @@ public class StaffServiceImpl implements StaffService{
             .filter(d -> d == id)
             .findFirst()
             .orElseThrow(() -> new GeneralException(APP_404_DEPT));
+    }
+
+    @Override
+    public StaffDetailDto getDetail(int id) {
+        Optional<Staff> toDetail = Optional.ofNullable(staffList.stream()
+                                        .filter(s -> s.getId()==id)
+                                        .findFirst()
+                                        .orElseThrow(() -> new GeneralException(APP_404_STAFF)));
+        Department department = deptList.stream()
+                                            .filter(s -> s.getDepartmentId() == toDetail.get().getDepartmentId())
+                                            .findFirst().get();
+        if (toDetail.get().getType().equals(StaffType.INTERN)){
+            var result = (InternStaff) toDetail.get();
+            return new StaffDetailDto(result.getId(),
+                                        result.getName(),
+                                        result.getAge(),
+                                        result.getGender(),
+                                        result.getType(),
+                                        department,
+                                        result.getInternDuration(),
+                                        BigDecimal.valueOf(0));
+        } 
+        else if (toDetail.get().getType().equals(StaffType.FULLTIME)){
+            var result = (FulltimeStaff) toDetail.get();
+            return new StaffDetailDto(result.getId(),
+                                        result.getName(),
+                                        result.getAge(),
+                                        result.getGender(),
+                                        result.getType(),
+                                        department,
+                                        0,
+                                        result.getSalary());
+        }
+        throw new GeneralException(APP_404_STAFF);
     }
 }

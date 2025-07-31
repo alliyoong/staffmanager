@@ -2,16 +2,16 @@ package com.webapp.staffmanager.department.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
 import com.webapp.staffmanager.department.entity.Department;
 import com.webapp.staffmanager.department.entity.dto.DepartmentAddRequestDto;
+import com.webapp.staffmanager.department.entity.dto.DepartmentDetailDto;
 import com.webapp.staffmanager.department.repository.DepartmentRepository;
 import com.webapp.staffmanager.department.service.DepartmentService;
 import com.webapp.staffmanager.exception.GeneralException;
-import com.webapp.staffmanager.exception.ResourceAlreadyInUseException;
-import com.webapp.staffmanager.exception.ResourceNotFoundException;
 import com.webapp.staffmanager.staff.entity.Staff;
 import com.webapp.staffmanager.staff.repository.StaffRepository;
 import static com.webapp.staffmanager.constant.AppResponseStatus.*;
@@ -50,7 +50,7 @@ public class DepartmentServiceImpl implements DepartmentService {
             if (staffList.stream()
                     .mapToInt(s -> s.getDepartmentId())
                     .anyMatch(s -> toDelete.get().getDepartmentId() == s)) {
-                throw new GeneralException(APP_404_STAFF_LIST);
+                throw new GeneralException(APP_400_DEPT);
             }
         }
 
@@ -61,12 +61,10 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void editDepartment(int id, DepartmentAddRequestDto dto) {
         isDeptListEmpty();
 
-        Optional<Department> toEdit = deptList.stream()
-                .filter(s -> s.getDepartmentId() == id)
-                .findFirst();
-        if (toEdit.isEmpty()) {
-            throw new GeneralException(APP_404_DEPT);
-        }
+        Optional<Department> toEdit = Optional.ofNullable(deptList.stream()
+                                                            .filter(s -> s.getDepartmentId() == id)
+                                                            .findFirst()
+                                                            .orElseThrow(() -> new GeneralException(APP_404_DEPT)));
         int toEditIndex = deptList.indexOf(toEdit.get());
         Department toAdd = new Department(id, dto.name(), dto.description());
         deptList.set(toEditIndex, toAdd);
@@ -75,15 +73,29 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public List<Department> searchDepartment(String phrase) {
         isDeptListEmpty();
-        var resultList = deptList.stream()
+        return deptList.stream()
                 .filter(s -> s.getName().toLowerCase().contains(phrase))
                 .toList();
-        return resultList;
     }
     
     private void isDeptListEmpty(){
         if (deptList.isEmpty()) {
             throw new GeneralException(APP_404_DEPT_LIST);
         }
+    }
+
+    @Override
+    public DepartmentDetailDto getDetail(int id) {
+        Optional<Department> toDetail = Optional.ofNullable(deptList.stream()
+                                        .filter(s -> s.getDepartmentId()==id)
+                                        .findFirst()
+                                        .orElseThrow(() -> new GeneralException(APP_404_DEPT)));
+        List<Staff> staffInDept = staffList.stream()
+                                            .filter(s -> s.getDepartmentId() == id)
+                                            .collect(Collectors.toList());
+        return new DepartmentDetailDto(toDetail.get().getDepartmentId(),
+                                        toDetail.get().getName(),
+                                        toDetail.get().getDescription(),
+                                        staffInDept);
     }
 }

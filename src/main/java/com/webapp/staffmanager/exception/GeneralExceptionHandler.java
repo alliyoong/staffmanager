@@ -11,11 +11,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.webapp.staffmanager.constant.AppResponseStatus;
 import com.webapp.staffmanager.util.HttpResponse;
 
 @RestControllerAdvice
 public class GeneralExceptionHandler implements ErrorController{
 
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(GeneralException.class)
     public HttpResponse generalException(GeneralException ex){
         return HttpResponse.error(ex.getStatus());
@@ -24,6 +26,7 @@ public class GeneralExceptionHandler implements ErrorController{
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public HttpResponse methodArgumentNotValidException(MethodArgumentNotValidException exception) {
+        // exception.getBindingResult().getFieldErrors().stream().forEach(System.out::println);
         List<String> errorMessages = exception
                 .getBindingResult()
                 .getFieldErrors()
@@ -34,9 +37,11 @@ public class GeneralExceptionHandler implements ErrorController{
                                     errorMessages.toString().replaceAll("\\[", "").replaceAll("\\]", ""));
     }
 
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)
     public HttpResponse internalServerException(Exception e) {
-        return HttpResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+        // return HttpResponse.error(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal server error");
+        return HttpResponse.error(AppResponseStatus.APP_500);
     }
 
 }

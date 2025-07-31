@@ -1,10 +1,10 @@
 package com.webapp.staffmanager.staff.service;
 
 import java.util.List;
-import java.util.Locale;
 
 import com.webapp.staffmanager.staff.entity.Staff;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
+import com.webapp.staffmanager.staff.entity.dto.StaffDetailDto;
 
 public interface StaffService {
     List<Staff> getStaffList();
@@ -12,5 +12,6 @@ public interface StaffService {
     void deleteStaff(int id);
     void editStaff(int id, StaffAddRequestDto dto);
     List<Staff> searchStaff(String phrase);
+    StaffDetailDto getDetail(int id);
     // String translate(Locale locale);
 }

@@ -38,6 +38,12 @@ public class DepartmentRestController {
         return HttpResponse.ok(result);
     }
 
+    @GetMapping("/detail/{id}")
+    public HttpResponse getDetail(@PathVariable("id") int id) {
+        var result = service.getDetail(id);
+        return HttpResponse.ok(result);
+    }
+
     @PostMapping()
     public HttpResponse add(@Validated({OnCreate.class, OnUpdate.class}) @RequestBody DepartmentAddRequestDto data) {
         service.addDepartment(data);

@@ -31,6 +31,11 @@ public class StaffRestController {
         var result = service.searchStaff(staffName);
         return HttpResponse.ok(result);
     }
+    @GetMapping("/detail/{id}")
+    public HttpResponse getDetail(@PathVariable("id") int id) {
+        var result = service.getDetail(id);
+        return HttpResponse.ok(result);
+    }
 
     @PostMapping()
     public HttpResponse add(@RequestBody StaffAddRequestDto data) {
