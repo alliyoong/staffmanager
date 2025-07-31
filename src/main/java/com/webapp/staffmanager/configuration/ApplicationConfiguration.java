@@ -8,32 +8,26 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
 @Configuration
 public class ApplicationConfiguration{
     @Value("${application.defaultLocale}")
-    private String appLocale;
+    private String defaultLocale;
 
-    // @Bean
-    // public LocaleResolver localeResolver() {
-        // var resolver = new SessionLocaleResolver();
-        // var defaultLocale = Locale.forLanguageTag(appLocale);
-        // resolver.setDefaultLocale(defaultLocale);
-        // return resolver;
-    // }
+    @Value("${application.baseName}")
+    private String baseName;
     @Bean
     public LocaleResolver localeResolver() {
-        var resolver = new SessionLocaleResolver();
-        var defaultLocale = Locale.forLanguageTag(appLocale);
-        resolver.setDefaultLocale(defaultLocale);
+        var resolver = new AcceptHeaderLocaleResolver();
+        resolver.setDefaultLocale(Locale.of(defaultLocale));
         return resolver;
     }
 
-    @Bean
-    public MessageSource messageSource() {
+    @Bean(name = "messages")
+    public ResourceBundleMessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
-        source.setBasename("messages");
+        source.setBasename(baseName);
         source.setDefaultEncoding("UTF-8");
         source.setUseCodeAsDefaultMessage(true);
         return source;

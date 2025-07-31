@@ -27,17 +27,11 @@ import lombok.RequiredArgsConstructor;
 public class StaffServiceImpl implements StaffService{
     private final List<Staff> staffList = StaffRepository.staffList;
     private final List<Department> deptList = DepartmentRepository.deptList;
-    private final MessageSource messageSource;
     public static int staticStaffId = 0;
 
     @Override
     public List<Staff> getStaffList() {
         return staffList;
-    }
-    //test resourcebundle - need to delete
-    public String translate(Locale locale){
-        var labels = ResourceBundle.getBundle("messages", locale);
-        return labels.getString("welcome");
     }
 
     @Override

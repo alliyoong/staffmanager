@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @RequestMapping("/department")
 @Validated
-public class DepartmentController {
+public class DepartmentRestController {
     private final DepartmentService service;
 
     @GetMapping()

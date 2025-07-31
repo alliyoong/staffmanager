@@ -12,5 +12,5 @@ public interface StaffService {
     void deleteStaff(int id);
     void editStaff(int id, StaffAddRequestDto dto);
     List<Staff> searchStaff(String phrase);
-    String translate(Locale locale);
+    // String translate(Locale locale);
 }

@@ -1,6 +1,8 @@
 package com.webapp.staffmanager.util;
 import java.time.LocalDateTime;
-import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.webapp.staffmanager.constant.AppResponseStatus;
@@ -18,22 +20,29 @@ public class HttpResponse<T> {
     private String statusCode;
     private String statusMessage;
     private T data;
+    private static final TranslatorService service = new TranslatorService();
 
     private HttpResponse(AppResponseStatus status, T data) {
         this.timeStamp = LocalDateTime.now();
         this.statusCode = status.getCode();
-        this.statusMessage = status.getMessage();
+        // this.statusMessage = status.getMessage();
+        this.statusMessage = service.translate(status.getCode());
         this.data = data;
+        System.out.println("CODE IS: "+this.statusCode);
     }
     private HttpResponse(AppResponseStatus status) {
         this.timeStamp = LocalDateTime.now();
         this.statusCode = status.getCode();
-        this.statusMessage = status.getMessage();
+        this.statusMessage = service.translate(status.getCode());
+        // this.statusMessage = status.getMessage();
+        System.out.println("CODE IS: "+this.statusCode);
     }
     private HttpResponse(String code, String message) {
         this.timeStamp = LocalDateTime.now();
         this.statusCode = code;
-        this.statusMessage = message;
+        // this.statusMessage = message;
+        this.statusMessage = service.translate(code);
+        System.out.println("CODE IS: "+this.statusCode);
     }
 
     private HttpResponse(){}

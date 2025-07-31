@@ -1,12 +1,5 @@
 package com.webapp.staffmanager.staff.restcontroller;
 
-import java.util.Locale;
-import java.util.Map;
-
-import static org.springframework.http.HttpStatus.*;
-
-import org.springframework.context.MessageSource;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,13 +18,16 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/staff")
 @RequiredArgsConstructor
-public class StaffController {
+public class StaffRestController {
     private final StaffService service;
 
-    @GetMapping("/hello")
-    public HttpResponse hello() {
-        return HttpResponse.ok(service.translate(Locale.of("vn")));
-    }
+    // @GetMapping("/hello")
+    // public HttpResponse hello(){
+    //     return HttpResponse.ok(tranService.translate("WELCOME"));
+    // }
+    // public HttpResponse hello() {
+    //     return HttpResponse.ok(service.translate(Locale.of("vn")));
+    // }
     @GetMapping()
     public HttpResponse getList() {
         var data = service.getStaffList();
