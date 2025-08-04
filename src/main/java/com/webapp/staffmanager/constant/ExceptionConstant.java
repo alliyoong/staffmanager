@@ -9,4 +9,6 @@ public class ExceptionConstant {
     public static final String EMPTY_STAFF_GENDER_ERROR_MSG = "Staff's gender cannot be empty";
     public static final String EMPTY_STAFF_TYPE_ERROR_MSG = "Staff's type cannot be empty";
     public static final String EMPTY_DEPARTMENT_ERROR_MSG = "Staff's department cannot be empty";
+
+    public static final String ERROR_PATH = "/error";
 }

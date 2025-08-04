@@ -13,6 +13,7 @@ import com.webapp.staffmanager.exception.GeneralException;
 import com.webapp.staffmanager.staff.entity.FulltimeStaff;
 import com.webapp.staffmanager.staff.entity.InternStaff;
 import com.webapp.staffmanager.staff.entity.Staff;
+import com.webapp.staffmanager.staff.entity.StaffFactory;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
 import com.webapp.staffmanager.staff.entity.dto.StaffDetailDto;
 import com.webapp.staffmanager.staff.repository.StaffRepository;
@@ -38,16 +39,17 @@ public class StaffServiceImpl implements StaffService{
     public void addStaff(StaffAddRequestDto dto) {
         Staff toAdd;
         isDepartmentExist(dto.departmentId());
-        if (dto.type().equals(StaffType.INTERN)) {
-            // toAdd = new InternStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.duration(), dto.gender(), dto.departmentId());
-            toAdd = new Staff
-                    .InternStaffBuilder(++staticStaffId, dto.name(),dto.type(), dto.departmentId(), dto.duration())
-                    .age(dto.age())
-                    .gender(dto.gender())
-                    .build();
-        } else {
-            toAdd = new FulltimeStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.salary(), dto.gender(), dto.departmentId());
-        }
+        // if (dto.type().equals(StaffType.INTERN)) {
+        //     // toAdd = new InternStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.duration(), dto.gender(), dto.departmentId());
+        //     toAdd = new Staff
+        //             .InternStaffBuilder(++staticStaffId, dto.name(),dto.type(), dto.departmentId(), dto.duration())
+        //             .age(dto.age())
+        //             .gender(dto.gender())
+        //             .build();
+        // } else {
+        //     toAdd = new FulltimeStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.salary(), dto.gender(), dto.departmentId());
+        // }
+        toAdd = StaffFactory.createStaff(dto, ++staticStaffId);
 
         staffList.add(toAdd);
     }
@@ -79,12 +81,12 @@ public class StaffServiceImpl implements StaffService{
         }
         int toEditIndex = staffList.indexOf(toEdit.get());
 
-        Staff toAdd;
-        if (dto.type().equals(StaffType.INTERN)) {
-            toAdd = new InternStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.duration(), dto.gender(), dto.departmentId());
-        } else {
-            toAdd = new FulltimeStaff(++staticStaffId, dto.type(), dto.name(), dto.age(), dto.salary(), dto.gender(), dto.departmentId());
-        }
+        Staff toAdd = StaffFactory.createStaff(dto, id);
+        // if (dto.type().equals(StaffType.INTERN)) {
+        //     toAdd = new InternStaff(id, dto.type(), dto.name(), dto.age(), dto.duration(), dto.gender(), dto.departmentId());
+        // } else {
+        //     toAdd = new FulltimeStaff(id, dto.type(), dto.name(), dto.age(), dto.salary(), dto.gender(), dto.departmentId());
+        // }
         staffList.set(toEditIndex, toAdd);
     }
 

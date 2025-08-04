@@ -23,7 +23,6 @@ public class HttpResponse<T> {
     private HttpResponse(AppResponseStatus status, T data) {
         this.timeStamp = LocalDateTime.now();
         this.statusCode = status.getCode();
-        // this.statusMessage = status.getMessage();
         this.statusMessage = service.translate(status.getCode());
         this.data = data;
     }
@@ -31,13 +30,11 @@ public class HttpResponse<T> {
         this.timeStamp = LocalDateTime.now();
         this.statusCode = status.getCode();
         this.statusMessage = service.translate(status.getCode());
-        // this.statusMessage = status.getMessage();
     }
     private HttpResponse(String code, String message) {
         this.timeStamp = LocalDateTime.now();
         this.statusCode = code;
         this.statusMessage = message;
-        // this.statusMessage = service.translate(code);
     }
 
     private HttpResponse(){}

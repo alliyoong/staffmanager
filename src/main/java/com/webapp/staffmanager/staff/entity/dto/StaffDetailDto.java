@@ -15,4 +15,6 @@ public record StaffDetailDto(
         Department department,
         int duration,
         BigDecimal salary
-) {}
+) {
+        
+}

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
@@ -26,8 +27,14 @@ public class StaffRestController {
         var data = service.getStaffList();
         return HttpResponse.ok(data);
     }
-    @GetMapping("/{staffName}")
-    public HttpResponse search(@PathVariable("staffName") String staffName) {
+    // todo - change this to requestparam
+    // @GetMapping("/{staffName}")
+    // public HttpResponse search(@PathVariable("staffName") String staffName) {
+    //     var result = service.searchStaff(staffName);
+    //     return HttpResponse.ok(result);
+    // }
+    @GetMapping("/search")
+    public HttpResponse search(@RequestParam(name="name", required = false, defaultValue = "") String staffName) {
         var result = service.searchStaff(staffName);
         return HttpResponse.ok(result);
     }

@@ -1,4 +1,7 @@
 spring:
+  web:
+    resources:
+      add-mappings: false
   output:
     ansi:
       enabled: ALWAYS
@@ -11,6 +14,8 @@ application:
 
 server:
   port: 8088
+  error:
+    path: /error
 #  error:
 #    whitelabel:
 #      enabled: false
@@ -18,3 +23,12 @@ server:
 logging:
   level:
     root: INFO
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health, info
