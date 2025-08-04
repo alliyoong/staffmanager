@@ -21,10 +21,8 @@ import com.webapp.staffmanager.staff.service.StaffService;
 import com.webapp.staffmanager.util.StaffType;
 import static com.webapp.staffmanager.constant.AppResponseStatus.*;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class StaffServiceImpl implements StaffService{
     private final List<Staff> staffList = StaffRepository.staffList;
     private final List<Department> deptList = DepartmentRepository.deptList;

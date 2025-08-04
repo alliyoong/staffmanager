@@ -26,9 +26,11 @@ logging:
 
 management:
   endpoint:
+    startup:
+      access: unrestricted
     health:
       show-details: always
   endpoints:
     web:
       exposure:
-        include: health, info
+        include: '*'
