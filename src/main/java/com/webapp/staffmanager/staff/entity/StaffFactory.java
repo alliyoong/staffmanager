@@ -7,25 +7,26 @@ import com.webapp.staffmanager.util.StaffType;
 
 public class StaffFactory {
     public static Staff createStaff(StaffAddRequestDto staff, int id){
-        return switch (staff.type()) {
-            case StaffType.FULLTIME -> {
-                yield new FulltimeStaff(id, 
-                                        staff.type(), 
-                                        staff.name(), 
-                                        staff.age(), 
-                                        staff.salary(), 
-                                        staff.gender(), 
-                                        staff.departmentId());
-            }
-            case StaffType.INTERN -> {
-                yield new InternStaff(id,
-                                        staff.type(), 
-                                        staff.name(), 
-                                        staff.age(), 
-                                        staff.duration(), 
-                                        staff.gender(), 
-                                        staff.departmentId());
-            }
-        };
+        // return switch (staff.type()) {
+        //     case StaffType.FULLTIME -> {
+        //         yield new FulltimeStaff(id, 
+        //                                 staff.type(), 
+        //                                 staff.name(), 
+        //                                 staff.age(), 
+        //                                 staff.salary(), 
+        //                                 staff.gender(), 
+        //                                 staff.departmentId());
+        //     }
+        //     case StaffType.INTERN -> {
+        //         yield new InternStaff(id,
+        //                                 staff.type(), 
+        //                                 staff.name(), 
+        //                                 staff.age(), 
+        //                                 staff.duration(), 
+        //                                 staff.gender(), 
+        //                                 staff.departmentId());
+        //     }
+        // };
+        return null;
     }
 }

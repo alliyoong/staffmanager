@@ -1,20 +1,38 @@
 package com.webapp.staffmanager.department.entity;
 
-import lombok.AllArgsConstructor;
+import java.util.List;
+
+import com.webapp.staffmanager.staff.entity.Staff;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 
 @Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Entity
 public class Department {
+    @Id
+    @Column(name = "department_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int departmentId;
-    private String name;
-    private String description;
+    // @Column(name = "department_name")
+    private String departmentName;
+    // @Column(name = "department_description")
+    private String departmentDescription;
 
-    @Override
-    public String toString() {
-        return name + " - " + departmentId + " - " + description;
+    @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    private List<Staff> staffList;
+
+    public Department() {}
+    public Department(String name, String description) {
+        this.departmentName = name;
+        this.departmentDescription = description;
     }
 
 }

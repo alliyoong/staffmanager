@@ -33,12 +33,6 @@ public class DepartmentRestController {
         var data = service.getDeptList();
         return HttpResponse.ok(data);
     }
-    // todo - change this to requestparam
-    // @GetMapping("/{deptName}")
-    // public HttpResponse search(@PathVariable("deptName") String deptName) {
-    //     var result = service.searchDepartment(deptName);
-    //     return HttpResponse.ok(result);
-    // }
     @GetMapping("/search")
     public HttpResponse search(@RequestParam(name="name", required = false, defaultValue = "") String deptName) {
         var result = service.searchDepartment(deptName);

@@ -1,6 +1,8 @@
 package com.webapp.staffmanager;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties.Application;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.jpa.JpaRepositoriesAutoConfiguration;
 import org.springframework.boot.autoconfigure.data.web.SpringDataWebAutoConfiguration;
@@ -9,15 +11,10 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerA
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationAutoConfiguration;
 import org.springframework.boot.context.metrics.buffering.BufferingApplicationStartup;
+import org.springframework.context.ApplicationContext;
 
-@SpringBootApplication(exclude = { DataSourceAutoConfiguration.class,
-		HibernateJpaAutoConfiguration.class,
-		DataSourceTransactionManagerAutoConfiguration.class,
-		JpaRepositoriesAutoConfiguration.class,
-		SpringDataWebAutoConfiguration.class,
-		SqlInitializationAutoConfiguration.class,
-})
-public class StaffmanagerApplication {
+@SpringBootApplication
+public class StaffmanagerApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(StaffmanagerApplication.class, args);;
