@@ -12,4 +12,6 @@ public interface DepartmentService {
     void editDepartment(int id, DepartmentAddRequestDto dto);
     List<Department> searchDepartment(String phrase);
     DepartmentDetailDto getDetail(int id);
+    // mapstruct mapper need this
+    Department findDepartmentById(int id);
 }

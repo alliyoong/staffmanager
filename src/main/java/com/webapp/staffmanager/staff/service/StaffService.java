@@ -14,4 +14,7 @@ public interface StaffService {
     List<Staff> searchStaff(String phrase);
     StaffDetailDto getDetail(int id);
     // String translate(Locale locale);
+    
+    // bulk add data for testing purpose right now
+    void saveList(List<StaffAddRequestDto> dtoList);
 }

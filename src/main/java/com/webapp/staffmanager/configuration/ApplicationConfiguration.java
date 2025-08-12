@@ -2,6 +2,11 @@ package com.webapp.staffmanager.configuration;
 
 import java.util.Locale;
 
+import org.modelmapper.Conditions;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.record.RecordModule;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +21,7 @@ public class ApplicationConfiguration{
 
     @Value("${application.baseName}")
     private String baseName;
+
     @Bean
     public LocaleResolver localeResolver() {
         var resolver = new AcceptHeaderLocaleResolver();
@@ -31,4 +37,14 @@ public class ApplicationConfiguration{
         source.setUseCodeAsDefaultMessage(true);
         return source;
     }   
+    
+    // @Bean
+    // public ModelMapper modelMapper() {
+    //     ModelMapper modelMapper = new ModelMapper();
+    //     modelMapper.getConfiguration().setAmbiguityIgnored(true);
+    //     modelMapper.getConfiguration().setPropertyCondition(Conditions.isNotNull());
+    //     modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
+    //     modelMapper.registerModule(new RecordModule());
+    //     return modelMapper;
+    // }
 }

@@ -2,6 +2,8 @@ package com.webapp.staffmanager.department.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.webapp.staffmanager.staff.entity.Staff;
 
 import jakarta.persistence.Column;
@@ -27,6 +29,7 @@ public class Department {
     private String departmentDescription;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<Staff> staffList;
 
     public Department() {}

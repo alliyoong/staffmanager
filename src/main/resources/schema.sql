@@ -18,13 +18,20 @@ USE staff_manager_db;
 -- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS department (
     department_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- Numeric ID for department
-    department_name VARCHAR(100) NOT NULL UNIQUE,
-    department_description VARCHAR(200) NOT NULL UNIQUE
+    department_name VARCHAR(100) NOT NULL,
+    department_description VARCHAR(200) NOT NULL,
+    UNIQUE (department_name) -- Ensure department names are unique
 );
 
+INSERT INTO department (department_name, department_description) VALUES
+('Human Resources', 'Handles employee relations and staffing'),
+('Finance', 'Manages financial records and transactions'),
+('IT', 'Responsible for technology and systems support'),
+('Marketing', 'Oversees marketing strategies and campaigns'),
+('Sales', 'Handles sales operations and customer relations');
 -- -----------------------------------------------------------------------------
 CREATE TABLE IF NOT EXISTS staff (
-    staff_id INT UNSIGNED PRIMARY KEY, -- Numeric ID for staff member
+    staff_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- Numeric ID for staff member
     full_name VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
     phone_number VARCHAR(15) UNIQUE,
@@ -32,7 +39,7 @@ CREATE TABLE IF NOT EXISTS staff (
     date_of_birth DATE,
     join_date DATE,
     department_id INT UNSIGNED NOT NULL,
-    title_id INT UNSIGNED,
+    -- title_id INT UNSIGNED,
     staff_status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
     FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT
     -- FOREIGN KEY (title_id) REFERENCES staff_title(title_id) ON DELETE RESTRICT 

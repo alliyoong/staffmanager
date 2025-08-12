@@ -1,5 +1,8 @@
 package com.webapp.staffmanager.staff.restcontroller;
 
+import java.util.List;
+
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto.OnCreate;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
+import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto.OnUpdate;
 import com.webapp.staffmanager.staff.service.StaffService;
 import com.webapp.staffmanager.util.HttpResponse;
 
@@ -19,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/staff")
 @RequiredArgsConstructor
+@Validated
 public class StaffRestController {
     private final StaffService service;
 
@@ -45,14 +51,14 @@ public class StaffRestController {
     }
 
     @PostMapping()
-    public HttpResponse add(@RequestBody StaffAddRequestDto data) {
+    public HttpResponse add( @Validated({OnCreate.class, OnUpdate.class}) @RequestBody StaffAddRequestDto data) {
         service.addStaff(data);
         return HttpResponse.created();
     }
 
     @PutMapping(path = "/{id}")
     public HttpResponse edit(@PathVariable("id") int id, 
-                            @RequestBody StaffAddRequestDto data) {
+                             @Validated({OnCreate.class, OnUpdate.class}) @RequestBody StaffAddRequestDto data) {
         service.editStaff(id, data);
         return HttpResponse.created();
     }
@@ -63,5 +69,11 @@ public class StaffRestController {
         return HttpResponse.noContent();
     }
 
+    // for testing purpose
+    @PostMapping ("/batch-insert")
+    public HttpResponse saveAll(@RequestBody List<StaffAddRequestDto> dtoList) {
+        service.saveList(dtoList);
+        return HttpResponse.noContent();
+    }
 
 }

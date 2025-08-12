@@ -11,8 +11,6 @@ import com.webapp.staffmanager.department.entity.dto.DepartmentDetailDto;
 import com.webapp.staffmanager.department.repository.DepartmentRepository;
 import com.webapp.staffmanager.department.service.DepartmentService;
 import com.webapp.staffmanager.exception.GeneralException;
-import com.webapp.staffmanager.staff.entity.Staff;
-import com.webapp.staffmanager.staff.repository.StaffRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -42,15 +40,11 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void deleteDepartment(int id) {
-        Optional<Department> toDelete = departmentRepository.findById(id);
-        if (toDelete.isEmpty()) {
-            throw new GeneralException(APP_404_DEPT);
-        } 
-        else {
-                // todo: check if department is empty
-            if (!toDelete.get().getStaffList().isEmpty()) {
-                throw new GeneralException(APP_400_DEPT);
-            }
+        var toDelete = departmentRepository.findById(id)
+                                    .orElseThrow(() -> new GeneralException(APP_404_DEPT));
+
+        if (!toDelete.getStaffList().isEmpty()) {
+            throw new GeneralException(APP_400_DEPT);
         }
 
         departmentRepository.deleteById(id);
@@ -81,5 +75,11 @@ public class DepartmentServiceImpl implements DepartmentService {
                                                         department.getDepartmentDescription(), 
                                                         department.getStaffList()))
             .orElseThrow(() -> new GeneralException(APP_404_DEPT)) ;
+    }
+
+    @Override
+    public Department findDepartmentById(int id) {
+        return departmentRepository.findById(id)
+            .orElseThrow(() -> new GeneralException(APP_404_DEPT));
     }
 }
