@@ -38,6 +38,12 @@ server:
 
 logging:
   level:
+    org:
+      hibernate:
+        # orm:
+        #   jdbc:
+        #     bind: TRACE
+        # SQL: DEBUG
     root: INFO
 
 management:

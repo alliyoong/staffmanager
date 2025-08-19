@@ -17,4 +17,7 @@ public interface StaffService {
     
     // bulk add data for testing purpose right now
     void saveList(List<StaffAddRequestDto> dtoList);
+
+    // attendance mapper need this
+    Staff findById(int id);
 }

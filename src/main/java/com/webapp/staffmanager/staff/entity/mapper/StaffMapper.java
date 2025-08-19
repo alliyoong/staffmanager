@@ -2,6 +2,7 @@ package com.webapp.staffmanager.staff.entity.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 import com.webapp.staffmanager.department.service.DepartmentService;
@@ -18,6 +19,9 @@ public interface StaffMapper{
     @Mapping(source = "departmentId", target = "department")
     @Mapping(target = "joinDate", ignore = true)
     Staff toStaff(StaffAddRequestDto staffAddRequestDto);
+
+    @Mapping(source = "departmentId", target = "department")
+    void updateStaffFromDto(StaffAddRequestDto dto, @MappingTarget Staff staff);
     
     StaffDetailDto fromStaff(Staff staff);
 }

@@ -1,7 +1,6 @@
 package com.webapp.staffmanager.department.service.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -14,11 +13,13 @@ import com.webapp.staffmanager.exception.GeneralException;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.webapp.staffmanager.constant.AppResponseStatus.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class DepartmentServiceImpl implements DepartmentService { 
     private final DepartmentRepository departmentRepository;
 
@@ -43,6 +44,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         var toDelete = departmentRepository.findById(id)
                                     .orElseThrow(() -> new GeneralException(APP_404_DEPT));
 
+        // don't let delete department if it has staff members
         if (!toDelete.getStaffList().isEmpty()) {
             throw new GeneralException(APP_400_DEPT);
         }

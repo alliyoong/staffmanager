@@ -22,7 +22,7 @@ import com.webapp.staffmanager.util.HttpResponse;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/staff")
+@RequestMapping("/api/staff")
 @RequiredArgsConstructor
 @Validated
 public class StaffRestController {
@@ -33,12 +33,6 @@ public class StaffRestController {
         var data = service.getStaffList();
         return HttpResponse.ok(data);
     }
-    // todo - change this to requestparam
-    // @GetMapping("/{staffName}")
-    // public HttpResponse search(@PathVariable("staffName") String staffName) {
-    //     var result = service.searchStaff(staffName);
-    //     return HttpResponse.ok(result);
-    // }
     @GetMapping("/search")
     public HttpResponse search(@RequestParam(name="name", required = false, defaultValue = "") String staffName) {
         var result = service.searchStaff(staffName);
