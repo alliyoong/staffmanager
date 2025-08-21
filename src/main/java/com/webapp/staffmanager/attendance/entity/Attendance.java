@@ -1,5 +1,6 @@
 package com.webapp.staffmanager.attendance.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
@@ -37,6 +38,7 @@ public class Attendance {
     @Column(name = "attendance_status")
     @Enumerated(EnumType.STRING)
     private AttendanceStatus status;
+    private BigDecimal totalHours;
 
     private LocalTime checkInTime;
     private LocalTime checkOutTime;

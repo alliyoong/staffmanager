@@ -18,7 +18,6 @@ public record AttendanceAddRequestDto(
     AttendanceStatus status,
     @NotNull(message = EMPTY_CHECK_IN_TIME_ERROR_MSG, groups = {OnCreate.class, OnUpdate.class})
     LocalTime checkInTime,
-    @NotNull(message = EMPTY_CHECK_OUT_TIME_ERROR_MSG, groups = {OnUpdate.class})
     LocalTime checkOutTime
 ) {
     public interface OnUpdate{}

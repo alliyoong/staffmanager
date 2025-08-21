@@ -30,6 +30,7 @@ INSERT INTO department (department_name, department_description) VALUES
 ('Marketing', 'Oversees marketing strategies and campaigns'),
 ('Sales', 'Handles sales operations and customer relations');
 -- -----------------------------------------------------------------------------
+
 CREATE TABLE IF NOT EXISTS staff (
     staff_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- Numeric ID for staff member
     full_name VARCHAR(100) NOT NULL,
@@ -81,6 +82,20 @@ VALUES
 --     title_description VARCHAR(200) NOT NULL UNIQUE
 -- );
 
+CREATE TABLE IF NOT EXISTS app_account (
+    account_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
+    staff_id INT UNSIGNED NOT NULL,
+    username VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL ,
+    status ENUM('ENABLED', 'DISABLED') NOT NULl,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_login_date TIMESTAMP,
+    last_login_date_display TIMESTAMP,
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE CASCADE
+);
+INSERT INTO app_account (staff_id, username, password, status) VALUES
+(3, 'admin', '$2a$07$apzCQYDluQnRcknJdNYUGeXKq1L1CqUEJzC73/.7yGMgBBNxJ3o9G', 'ENABLED');
+
 CREATE TABLE IF NOT EXISTS attendance (
     attendance_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
     staff_id INT UNSIGNED NOT NULL,
@@ -88,7 +103,7 @@ CREATE TABLE IF NOT EXISTS attendance (
     check_in_time TIME NOT NULL,
     check_out_time TIME,
     total_hours DECIMAL(5,2),
-    -- attendance_status ENUM('REQUESTED', 'APPROVED', 'REJECTED') NOT NULL,
+    attendance_status ENUM('REQUESTED', 'APPROVED', 'REJECTED') NOT NULL DEFAULT 'REQUESTED',
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE CASCADE,
     UNIQUE (staff_id, work_date) -- Đảm bảo mỗi nhân viên chỉ có một bản ghi mỗi ngày
     -- có thể add thêm loại công việc như 'FULL_DAY', 'HALF_DAY', 'OVERTIME', 'TRIP' nếu cần

@@ -2,12 +2,15 @@ package com.webapp.staffmanager.staff.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.webapp.staffmanager.staff.entity.Staff;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
 import com.webapp.staffmanager.staff.entity.dto.StaffDetailDto;
 
 public interface StaffService {
     List<Staff> getStaffList();
+    Page<Staff> getPage(int pageNumber, int pageSize);
     void addStaff(StaffAddRequestDto dto);
     void deleteStaff(int id);
     void editStaff(int id, StaffAddRequestDto dto);

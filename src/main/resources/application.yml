@@ -27,6 +27,8 @@ application:
   name: staffmanager
   title: Manage cool people
   version: 1.0
+  url:
+    front-end:
 
 server:
   port: 8088
@@ -56,3 +58,9 @@ management:
     web:
       exposure:
         include: '*'
+
+security:
+  jwt:
+    secret: Ns6SpnvuJgwRCli/WbFpCIPhBkhjBTYxE4VORK/dxRQ=
+    access-token-lifetime-seconds: 3000
+    

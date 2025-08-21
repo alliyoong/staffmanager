@@ -22,9 +22,7 @@ public class Department {
     @Column(name = "department_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int departmentId;
-    // @Column(name = "department_name")
     private String departmentName;
-    // @Column(name = "department_description")
     private String departmentDescription;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.LAZY)

@@ -11,14 +11,14 @@ import com.webapp.staffmanager.staff.service.StaffService;
 
 @Mapper(componentModel = "spring", uses = { StaffService.class})
 public interface AttendanceMapper {
-    AttendanceMapper INSTANCE = Mappers.getMapper(AttendanceMapper.class);
+    // AttendanceMapper INSTANCE = Mappers.getMapper(AttendanceMapper.class);
     
-    @Mapping(target = "id", ignore = true)
-    @Mapping(source = "staffId", target = "staff")
-    Attendance toAttendance(AttendanceAddRequestDto attendanceAddReuqestDto);
+    // @Mapping(target = "id", ignore = true)
+    // @Mapping(source = "staffId", target = "staff")
+    // Attendance toAttendance(AttendanceAddRequestDto attendanceAddReuqestDto);
 
-    @Mapping(source = "staffId", target = "staff")
-    void updateAttendanceFromDto(AttendanceAddRequestDto dto, @MappingTarget Attendance attendance);
+    // @Mapping(source = "staffId", target = "staff")
+    // void updateAttendanceFromDto(AttendanceAddRequestDto dto, @MappingTarget Attendance attendance);
     
     
 }

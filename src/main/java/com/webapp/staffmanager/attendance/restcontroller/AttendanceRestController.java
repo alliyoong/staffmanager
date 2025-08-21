@@ -21,21 +21,21 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/attendance")
+@RequestMapping("/api")
 @Validated
 public class AttendanceRestController {
      private final AttendanceService service;
 
-    @GetMapping()
-    public HttpResponse getList() {
-        var data = service.getList();
-        return HttpResponse.ok(data);
-    }
-    @GetMapping("/search")
-    public HttpResponse search(@RequestParam(name="staff_id", required = false, defaultValue = "") int staffId) {
-        var result = service.searchOnStaffId(staffId);
-        return HttpResponse.ok(result);
-    }
+    // @GetMapping()
+    // public HttpResponse getList() {
+    //     var data = service.getList();
+    //     return HttpResponse.ok(data);
+    // }
+    // @GetMapping("/search")
+    // public HttpResponse search(@RequestParam(name="staff_id", required = false, defaultValue = "") int staffId) {
+    //     var result = service.searchOnStaffId(staffId);
+    //     return HttpResponse.ok(result);
+    // }
 
     // @GetMapping("/detail/{id}")
     // public HttpResponse getDetail(@PathVariable("id") int id) {
@@ -43,23 +43,29 @@ public class AttendanceRestController {
     //     return HttpResponse.ok(result);
     // }
 
-    @PostMapping()
-    public HttpResponse add(@Validated @RequestBody AttendanceAddRequestDto data) {
-        service.addAttendance(data);
+    @GetMapping("/check-in/{staffId}")
+    public HttpResponse checkIn(@PathVariable int staffId) {
+        service.checkIn(staffId);
         return HttpResponse.created();
     }
 
-    @PutMapping(path = "/{id}")
-    public HttpResponse edit(@PathVariable("id") int id, 
-                            @Validated @RequestBody AttendanceAddRequestDto data) {
-        service.editAttendance(id, data);
+    @GetMapping("/check-out/{staffId}")
+    public HttpResponse checkOut(@PathVariable int staffId) {
+        service.checkOut(staffId);
         return HttpResponse.created();
     }
 
-    @DeleteMapping (path = "/{id}")
-    public HttpResponse delete(@PathVariable int id) {
-        service.deleteAttendance(id);
-        return HttpResponse.noContent();
-    }
+    // @PutMapping(path = "/{id}")
+    // public HttpResponse edit(@PathVariable("id") int id, 
+    //                         @Validated @RequestBody AttendanceAddRequestDto data) {
+    //     service.editAttendance(id, data);
+    //     return HttpResponse.created();
+    // }
+
+    // @DeleteMapping (path = "/{id}")
+    // public HttpResponse delete(@PathVariable int id) {
+    //     service.deleteAttendance(id);
+    //     return HttpResponse.noContent();
+    // }
    
 }

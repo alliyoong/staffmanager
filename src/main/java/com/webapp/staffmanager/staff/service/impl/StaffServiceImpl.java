@@ -2,6 +2,10 @@ package com.webapp.staffmanager.staff.service.impl;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.webapp.staffmanager.attendance.repository.AttendanceRepository;
@@ -30,6 +34,14 @@ public class StaffServiceImpl implements StaffService {
     @Override
     public List<Staff> getStaffList() {
         return staffRepository.findAll();
+    }
+
+    @Override
+    public Page<Staff> getPage(int pageNumber, int pageSize) {
+        Pageable sortedPageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").ascending());
+
+        // Page<Staff> staffPage = staffRepository.findByNameContaining("laptop", sortedPageable);
+        return staffRepository.findAll(sortedPageable);
     }
 
     @Override
