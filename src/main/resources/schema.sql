@@ -31,6 +31,14 @@ INSERT INTO department (department_name, department_description) VALUES
 ('Sales', 'Handles sales operations and customer relations');
 -- -----------------------------------------------------------------------------
 
+CREATE TABLE IF NOT EXISTS job_position (
+    position_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- Numeric ID for job position
+    position_name VARCHAR(100) NOT NULL UNIQUE,
+    position_description VARCHAR(200) NOT NULL UNIQUE,
+    min_salary DECIMAL(15,2) NOT NULL,
+    max_salary DECIMAL(15,2) NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS staff (
     staff_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- Numeric ID for staff member
     full_name VARCHAR(100) NOT NULL,
@@ -41,10 +49,11 @@ CREATE TABLE IF NOT EXISTS staff (
     date_of_birth DATE,
     join_date DATE,
     department_id INT UNSIGNED NOT NULL,
-    -- title_id INT UNSIGNED,
+    job_position_id INT UNSIGNED,
     staff_status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT
-    -- FOREIGN KEY (title_id) REFERENCES staff_title(title_id) ON DELETE RESTRICT 
+    gross_salary DECIMAL(15,2) NOT NULL DEFAULT 0,
+    FOREIGN KEY (department_id) REFERENCES department(department_id) ON DELETE RESTRICT,
+    FOREIGN KEY (job_position_id) REFERENCES job_position(position_id) ON DELETE RESTRICT 
 );
 
 INSERT INTO staff 
@@ -76,12 +85,6 @@ VALUES
 ('Xavier Allen', 'xavier.allen24@example.com', '725686513818', '0901234590', 'MALE', '1992-07-27', '2019-12-20', 3, 'ACTIVE'),
 ('Yara Young', 'yara.young25@example.com', '516070571262', '0901234591', 'FEMALE', '1994-01-08', '2018-05-09', 4, 'ACTIVE');
 
--- CREATE TABLE IF NOT EXISTS staff_title (
---     title_id INT UNSIGNED PRIMARY KEY, -- Numeric ID for job position
---     title_name VARCHAR(100) NOT NULL UNIQUE,
---     title_description VARCHAR(200) NOT NULL UNIQUE
--- );
-
 CREATE TABLE IF NOT EXISTS app_account (
     account_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
     staff_id INT UNSIGNED NOT NULL,
@@ -109,7 +112,7 @@ CREATE TABLE IF NOT EXISTS attendance (
     -- có thể add thêm loại công việc như 'FULL_DAY', 'HALF_DAY', 'OVERTIME', 'TRIP' nếu cần
 );
 
-CREATE TABLE attendance_request (
+CREATE TABLE IF NOT EXISTS attendance_request (
     request_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     staff_id INT UNSIGNED NOT NULL,
     request_type ENUM('ADJUSTMENT', 'DAY_OFF', 'OVERTIME') NOT NULL,
@@ -118,7 +121,7 @@ CREATE TABLE attendance_request (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE CASCADE
 );
-CREATE TABLE attendance_adjustment_request (
+CREATE TABLE IF NOT EXISTS attendance_adjustment_request (
     request_id INT UNSIGNED PRIMARY KEY,
     target_date DATE NOT NULL,
     new_check_in_time DATETIME,
@@ -127,7 +130,7 @@ CREATE TABLE attendance_adjustment_request (
     FOREIGN KEY (request_id) REFERENCES attendance_request(request_id) ON DELETE CASCADE
 );
 
-CREATE TABLE day_off_request (
+CREATE TABLE IF NOT EXISTS day_off_request (
     request_id INT UNSIGNED PRIMARY KEY,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
@@ -136,7 +139,7 @@ CREATE TABLE day_off_request (
     FOREIGN KEY (request_id) REFERENCES attendance_request(request_id) ON DELETE CASCADE
 );
 
-CREATE TABLE overtime_request (
+CREATE TABLE IF NOT EXISTS overtime_request (
     request_id INT UNSIGNED PRIMARY KEY,
     target_date DATE NOT NULL,
     start_time DATETIME NOT NULL,
@@ -144,14 +147,78 @@ CREATE TABLE overtime_request (
     reason VARCHAR(255),
     FOREIGN KEY (request_id) REFERENCES attendance_request(request_id) ON DELETE CASCADE
 );
--- CREATE TABLE IF NOT EXISTS Users (
---     user_id INT AUTO_INCREMENT PRIMARY KEY,
---     username VARCHAR(50) NOT NULL UNIQUE,
---     password_hash VARCHAR(255) NOT NULL,
---     staff_id INT NOT NULL UNIQUE,
---     -- role_id INT NOT NULL,
---     -- FOREIGN KEY (role_id) REFERENCES Roles(role_id) ON DELETE RESTRICT,
---     FOREIGN KEY (staff_id) REFERENCES StaffMembers(staff_id) ON DELETE CASCADE
+
+CREATE TABLE IF NOT EXISTS attendance_rule (
+    latest_check_in_time INT NOT NULL,
+    min_hours_per_day INT NOT NULL,
+    min_days_per_month INT NOT NULL,
+    overtime_payroll_rate DECIMAL(4,2) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS deduction_type (
+    deduction_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(200) NOT NULL,
+    deduction_rate DECIMAL(4,2),
+    deduction_amount DECIMAL(10,2),
+    job_position_id INT UNSIGNED,
+    FOREIGN KEY (job_position_id) REFERENCES job_position(position_id) ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS bonus_type (
+    bonus_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description VARCHAR(200) NOT NULL,
+    bonus_rate DECIMAL(4,2),
+    bonus_amount DECIMAL(10,2),
+    job_position_id INT UNSIGNED,
+    FOREIGN KEY (job_position_id) REFERENCES job_position(position_id) ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS position_bonus (
+    position_id INT UNSIGNED NOT NULL,
+    bonus_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (position_id) REFERENCES job_position(position_id) ON DELETE CASCADE,
+    FOREIGN KEY (bonus_id) REFERENCES bonus_type(bonus_id),
+    PRIMARY KEY (position_id, bonus_id)
+);
+
+CREATE TABLE IF NOT EXISTS position_deduction (
+    position_id INT UNSIGNED NOT NULL,
+    deduction_id INT UNSIGNED NOT NULL,
+    FOREIGN KEY (position_id) REFERENCES job_position(position_id) ON DELETE CASCADE,
+    FOREIGN KEY (deduction_id) REFERENCES deduction_type(deduction_id),
+    PRIMARY KEY (position_id, deduction_id)
+);
+
+CREATE TABLE IF NOT EXISTS payroll (
+    payroll_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    staff_id INT UNSIGNED NOT NULL,
+    gross_salary DECIMAL(15,2) NOT NULL,
+    net_salary DECIMAL(15,2) NOT NULL,
+    month TINYINT NOT NULL,
+    year INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (staff_id) REFERENCES staff(staff_id) ON DELETE CASCADE,
+    UNIQUE(staff_id, month, year)
+);
+
+-- CREATE TABLE IF NOT EXISTS payroll_bonus (
+--     payroll_bonus_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     payroll_id INT UNSIGNED NOT NULL,
+--     bonus_id INT UNSIGNED NOT NULL,
+--     amount DECIMAL(15,2) NOT NULL,
+--     FOREIGN KEY (payroll_id) REFERENCES payroll(payroll_id) ON DELETE CASCADE,
+--     FOREIGN KEY (bonus_id) REFERENCES bonus_type(bonus_id)
+-- );
+
+-- CREATE TABLE IF NOT EXISTS payroll_deduction (
+--     payroll_deduction_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+--     payroll_id INT UNSIGNED NOT NULL,
+--     deduction_id INT UNSIGNED NOT NULL,
+--     amount DECIMAL(15,2) NOT NULL, 
+--     FOREIGN KEY (payroll_id) REFERENCES payroll(payroll_id) ON DELETE CASCADE,
+--     FOREIGN KEY (deduction_id) REFERENCES deduction_type(deduction_id)
 -- );
 
 
