@@ -3,6 +3,8 @@ package com.webapp.staffmanager.constant;
 public class ExceptionConstant {
     public static final String EMPTY_DESCRIPTION_ERROR_MSG = "Description cannot be empty";
 
+    public static final String EMPTY_USERNAME_ERROR_MSG = "Name cannot be empty";
+    public static final String EMPTY_PASSWORD_ERROR_MSG = "Name cannot be empty";
     public static final String EMPTY_NAME_ERROR_MSG = "Name cannot be empty";
     public static final String EMPTY_EMAIL_ERROR_MSG = "Email cannot be empty";
     public static final String EMPTY_GENDER_ERROR_MSG = "Gender cannot be empty";

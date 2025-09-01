@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.webapp.staffmanager.authentication.entity.UserPrincipal;
 import com.webapp.staffmanager.authentication.repository.AccountRepository;
@@ -33,7 +34,9 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class JwtTokenService implements InitializingBean {
@@ -41,7 +44,7 @@ public class JwtTokenService implements InitializingBean {
 
     @Value("${security.jwt.secret}") // Base64-encoded secret (≥ 256 bits for HS256)
     private String base64Secret;
-    @Value("${security.jwt.access-token-lifetime-seconds}")
+    @Value("${security.jwt.access-token-lifetime-milliseconds}")
     private Long tokenLifetime;
 
     private SecretKey signingKey;
@@ -86,7 +89,9 @@ public class JwtTokenService implements InitializingBean {
     }
 
     private String[] getClaimsFromToken(String token) {
-        return (String[]) parseClaims(token).get(AUTHORITIES);
+        // todo: apply logic
+        // return (String[]) parseClaims(token).get(AUTHORITIES);
+        return Stream.of("ROLE_USER", "ROLE_ADMIN").toArray(String[]::new);
     }
 
     private String[] getClaimsFromUser(UserPrincipal user) {

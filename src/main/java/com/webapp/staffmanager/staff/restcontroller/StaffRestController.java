@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto.OnCreate;
+import com.webapp.staffmanager.authentication.entity.dto.RegisterRequestDto;
+import com.webapp.staffmanager.staff.entity.Staff;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto.OnUpdate;
 import com.webapp.staffmanager.staff.service.StaffService;
@@ -31,16 +33,18 @@ public class StaffRestController {
     private final StaffService service;
 
     @GetMapping()
-    public HttpResponse getList() {
-        var data = service.getStaffList();
+    public HttpResponse<List<Staff>> getStaffList() {
+        List<Staff> data = service.getStaffList();
         return HttpResponse.ok(data);
     }
 
-    @GetMapping(params = { "page", "size" })
+    @GetMapping(params = { "page", "size", "search" })
     public HttpResponse getPage(
             @RequestParam(required = true, defaultValue = "0") int page,
-            @RequestParam(required = true, defaultValue = "5") int size) {
-        var result = service.getPage(page, size);
+            @RequestParam(required = true, defaultValue = "5") int size,
+            @RequestParam(required = false, defaultValue = "") String search
+            ) {
+        var result = service.getPage(page, size, search);
         return HttpResponse.ok(result);
     }
 
@@ -75,6 +79,12 @@ public class StaffRestController {
         service.deleteStaff(id);
         return HttpResponse.noContent();
     }
+    
+    @GetMapping("/check-has-account/{id}")
+    public HttpResponse checkHasAccount(@PathVariable int id) {
+        var result = service.findAccountByStaffId(id);
+        return HttpResponse.ok(result);
+    }
 
     // for testing purpose
     @PostMapping("/batch-insert")
@@ -83,4 +93,15 @@ public class StaffRestController {
         return HttpResponse.noContent();
     }
 
+    @GetMapping("/status")
+    public HttpResponse getStatusList() {
+        var result = service.getStaffStatusList();
+        return HttpResponse.ok(result);
+    }
+
+    @GetMapping("/gender")
+    public HttpResponse getGenderList() {
+        var result = service.getGenderList();
+        return HttpResponse.ok(result);
+    }
 }

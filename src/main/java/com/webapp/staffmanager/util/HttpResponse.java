@@ -1,11 +1,15 @@
 package com.webapp.staffmanager.util;
 import java.time.LocalDateTime;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.webapp.staffmanager.constant.AppResponseStatus;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import static com.webapp.staffmanager.constant.AppResponseStatus.*;
@@ -18,18 +22,18 @@ public class HttpResponse<T> {
     private String statusCode;
     private String statusMessage;
     private T data;
-    private static final TranslatorService service = TranslatorService.getInstance();
+
 
     private HttpResponse(AppResponseStatus status, T data) {
         this.timeStamp = LocalDateTime.now();
         this.statusCode = status.getCode();
-        this.statusMessage = service.translate(status.getCode());
+        // this.statusMessage = status.getMessage();
         this.data = data;
     }
     private HttpResponse(AppResponseStatus status) {
         this.timeStamp = LocalDateTime.now();
         this.statusCode = status.getCode();
-        this.statusMessage = service.translate(status.getCode());
+        // this.statusMessage = status.getMessage();
     }
     private HttpResponse(String code, String message) {
         this.timeStamp = LocalDateTime.now();
@@ -39,19 +43,19 @@ public class HttpResponse<T> {
 
     private HttpResponse(){}
 
-    public static <T> HttpResponse ok(T data) {
-        return new HttpResponse(APP_200,  data);
+    public static <T> HttpResponse<T> ok(T data) {
+        return new HttpResponse<T>(APP_200,  data);
     }
-    public static <T> HttpResponse created() {
-        return new HttpResponse(APP_201);
+    public static <T> HttpResponse<T> created() {
+        return new HttpResponse<T>(APP_201);
     }
-    public static <T> HttpResponse noContent() {
-        return new HttpResponse(APP_204);
+    public static <T> HttpResponse<T> noContent() {
+        return new HttpResponse<T>(APP_204);
     }
-    public static HttpResponse error(AppResponseStatus status) {
-        return new HttpResponse(status);
+    public static <T> HttpResponse<T> error(AppResponseStatus status) {
+        return new HttpResponse<T>(status);
     }
-    public static HttpResponse error(int code, String message) {
-        return new HttpResponse(String.valueOf(code), message);
+    public static <T> HttpResponse<T> error(String code, String message) {
+        return new HttpResponse<T>(code, message);
     }
 }

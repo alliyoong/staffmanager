@@ -5,6 +5,7 @@ spring:
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: none
     show-sql: true
@@ -28,7 +29,7 @@ application:
   title: Manage cool people
   version: 1.0
   url:
-    front-end:
+    front-end: localhost:4200
 
 server:
   port: 8088
@@ -62,5 +63,5 @@ management:
 security:
   jwt:
     secret: Ns6SpnvuJgwRCli/WbFpCIPhBkhjBTYxE4VORK/dxRQ=
-    access-token-lifetime-seconds: 3000
+    access-token-lifetime-milliseconds: 3000000
     

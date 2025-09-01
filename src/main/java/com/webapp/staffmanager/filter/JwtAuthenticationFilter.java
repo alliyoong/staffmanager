@@ -18,10 +18,11 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import static com.webapp.staffmanager.constant.SecurityConstant.*;
 
+@Slf4j
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenService jwt;
@@ -46,19 +47,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             try {
                 String token = authHeader.substring(TOKEN_PREFIX.length()).trim();
+                // log.info("TOKEN: {}", token);
                 if (jwt.isValid(token)
                         && SecurityContextHolder.getContext().getAuthentication() == null) {
                     Authentication authentication = jwt.getAuthentication(token);
 
-                    // after watching
                     var newContext = SecurityContextHolder.createEmptyContext();
                     newContext.setAuthentication(authentication);
                     SecurityContextHolder.setContext(newContext);
 
-                    // before watching
-                    // SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
-                    SecurityContextHolder.clearContext();
+                    // SecurityContextHolder.clearContext();
                 }
             } catch (JwtException e) {
                 resolver.resolveException(request, response, null, e);

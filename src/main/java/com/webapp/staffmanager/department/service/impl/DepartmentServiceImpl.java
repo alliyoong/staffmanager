@@ -23,12 +23,6 @@ import static com.webapp.staffmanager.constant.AppResponseStatus.*;
 public class DepartmentServiceImpl implements DepartmentService { 
     private final DepartmentRepository departmentRepository;
 
-    // public DepartmentServiceImpl(DepartmentRepository departmentRepository) {
-    //     this.departmentRepository = departmentRepository;
-    // }
-
-    // private final StaffRepository staffRepository;
-
     public List<Department> getDeptList() {
         return departmentRepository.findAll();
     }

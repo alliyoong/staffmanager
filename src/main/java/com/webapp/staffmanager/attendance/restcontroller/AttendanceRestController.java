@@ -18,11 +18,13 @@ import com.webapp.staffmanager.department.entity.dto.DepartmentAddRequestDto.OnU
 import com.webapp.staffmanager.util.HttpResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/attendance")
 @Validated
+@Slf4j
 public class AttendanceRestController {
      private final AttendanceService service;
 
@@ -37,20 +39,20 @@ public class AttendanceRestController {
     //     return HttpResponse.ok(result);
     // }
 
-    // @GetMapping("/detail/{id}")
-    // public HttpResponse getDetail(@PathVariable("id") int id) {
-    //     var result = service.getDetail(id);
-    //     return HttpResponse.ok(result);
-    // }
+    @GetMapping("/{id}")
+    public HttpResponse getAttendance(@PathVariable("id") int id) {
+        var result = service.getAttendance(id);
+        return HttpResponse.ok(result);
+    }
 
     @GetMapping("/check-in/{staffId}")
-    public HttpResponse checkIn(@PathVariable int staffId) {
+    public HttpResponse checkIn(@PathVariable("staffId") int staffId) {
         service.checkIn(staffId);
         return HttpResponse.created();
     }
 
     @GetMapping("/check-out/{staffId}")
-    public HttpResponse checkOut(@PathVariable int staffId) {
+    public HttpResponse checkOut(@PathVariable("staffId") int staffId) {
         service.checkOut(staffId);
         return HttpResponse.created();
     }

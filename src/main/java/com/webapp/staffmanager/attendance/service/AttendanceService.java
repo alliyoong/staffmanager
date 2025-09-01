@@ -10,6 +10,7 @@ public interface AttendanceService {
     // void addAttendance(int staffId);
     void checkIn(int staffId);
     void checkOut(int staffId);
+    Attendance getAttendance(int staffId);
     // void deleteAttendance(int id);
     // // void editAttendance(int id, AttendanceAddRequestDto dto);
     // List<Attendance> searchOnStaffId(int id);

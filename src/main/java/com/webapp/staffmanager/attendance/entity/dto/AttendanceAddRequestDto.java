@@ -7,17 +7,23 @@ import com.webapp.staffmanager.constant.AttendanceStatus;
 import static com.webapp.staffmanager.constant.ExceptionConstant.*;
 
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.PastOrPresent;
 
 public record AttendanceAddRequestDto(
 
     @NotNull(message = EMPTY_STAFF_ERROR_MSG, groups = {OnCreate.class, OnUpdate.class})
     int staffId,
     @NotNull(message = EMPTY_DATE_ERROR_MSG, groups = {OnCreate.class, OnUpdate.class})
+    @PastOrPresent(groups = {OnCreate.class, OnUpdate.class})
     LocalDate workDate,
     @NotNull(message = EMPTY_STATUS_ERROR_MSG, groups = {OnCreate.class, OnUpdate.class})
     AttendanceStatus status,
+
     @NotNull(message = EMPTY_CHECK_IN_TIME_ERROR_MSG, groups = {OnCreate.class, OnUpdate.class})
+    @PastOrPresent(groups = {OnCreate.class, OnUpdate.class})
     LocalTime checkInTime,
+
+    @PastOrPresent(groups = {OnCreate.class, OnUpdate.class})
     LocalTime checkOutTime
 ) {
     public interface OnUpdate{}

@@ -1,21 +1,26 @@
 -- Database: staff_manager_db
--- This script creates a database and tables to manage staff information
-
--- Delete database if exists
-DROP DATABASE IF EXISTS staff_manager_db;
-
--- Create the database if it doesn't exist
-CREATE DATABASE IF NOT EXISTS staff_manager_db;
-
--- Use the newly created database
+-- Refresh the database
 USE staff_manager_db;
+SET FOREIGN_KEY_CHECKS = 0;
 
--- -----------------------------------------------------------------------------
--- Table 1: department
--- Stores information about different departments within the company.
--- department_id: Numeric ID for the department (primary key).
--- department_name: Unique name of the department.
--- -----------------------------------------------------------------------------
+DROP TABLE IF EXISTS `department`;
+DROP TABLE IF EXISTS `job_position`;
+DROP TABLE IF EXISTS `staff`;
+DROP TABLE IF EXISTS `app_account`;
+DROP TABLE IF EXISTS `attendance`;
+DROP TABLE IF EXISTS `attendance_request`;
+DROP TABLE IF EXISTS `attendance_adjustment_request`;
+DROP TABLE IF EXISTS `day_off_request`;
+DROP TABLE IF EXISTS `overtime_request`;
+DROP TABLE IF EXISTS `attendance_rule`;
+DROP TABLE IF EXISTS `deduction_type`;
+DROP TABLE IF EXISTS `bonus_type`;
+DROP TABLE IF EXISTS `position_bonus`;
+DROP TABLE IF EXISTS `position_deduction`;
+DROP TABLE IF EXISTS `payroll`;
+
+SET FOREIGN_KEY_CHECKS = 1;
+
 CREATE TABLE IF NOT EXISTS department (
     department_id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY, -- Numeric ID for department
     department_name VARCHAR(100) NOT NULL,

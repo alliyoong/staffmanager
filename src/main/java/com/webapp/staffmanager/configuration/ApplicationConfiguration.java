@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Locale;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -45,8 +46,9 @@ public class ApplicationConfiguration{
         return resolver;
     }
 
-    @Bean(name = "messages")
-    public ResourceBundleMessageSource messageSource() {
+    // @Bean(name = "messages")
+    @Bean
+    public MessageSource messageSource() {
         ResourceBundleMessageSource source = new ResourceBundleMessageSource();
         source.setBasename(baseName);
         source.setDefaultEncoding("UTF-8");

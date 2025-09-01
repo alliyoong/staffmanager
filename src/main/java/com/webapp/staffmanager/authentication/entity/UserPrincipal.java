@@ -33,6 +33,6 @@ public class UserPrincipal implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return this.account.getStatus() == AccountStatus.ENABLED ? true : false;
+        return this.account.getAccountStatus() == AccountStatus.ENABLED ? true : false;
     }
 }

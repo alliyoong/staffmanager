@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.webapp.staffmanager.authentication.entity.Account;
 import com.webapp.staffmanager.constant.Gender;
 import com.webapp.staffmanager.constant.StaffStatus;
 import com.webapp.staffmanager.department.entity.Department;
@@ -39,8 +40,10 @@ public class Staff {
     // private int titleId;
     @Column(name = "staff_status")
     @Enumerated(EnumType.STRING)
-    private StaffStatus status;
-    @CreationTimestamp
+    private StaffStatus staffStatus;
     private LocalDate joinDate;
     
+    @OneToOne(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private Account account;
 }

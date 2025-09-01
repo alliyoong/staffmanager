@@ -38,6 +38,14 @@ public class AttendanceServiceImpl implements AttendanceService {
     // }
 
     @Override
+    public Attendance getAttendance(int staffId) {
+        var today = LocalDate.now();
+        var attendance = attendanceRepository.findByStaffIdAndWorkDate(staffId, today)
+                .orElseThrow(() -> new GeneralException(APP_404_ATTENDANCE));
+        return attendance;
+    }
+
+    @Override
     public void checkIn(int staffId) {
         var target = staffRepository.findById(staffId)
                 .orElseThrow(() -> new GeneralException(APP_404_STAFF));
@@ -85,6 +93,7 @@ public class AttendanceServiceImpl implements AttendanceService {
         }
         throw new GeneralException(APP_400_CHECKOUT);
     }
+
     // @Override
     // public void deleteAttendance(int id) {
     // if(attendanceRepository.existsById(id)){

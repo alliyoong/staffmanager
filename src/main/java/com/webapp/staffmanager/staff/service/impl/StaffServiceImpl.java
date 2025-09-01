@@ -1,22 +1,31 @@
 package com.webapp.staffmanager.staff.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.webapp.staffmanager.attendance.repository.AttendanceRepository;
+import com.webapp.staffmanager.authentication.entity.Account;
+import com.webapp.staffmanager.authentication.repository.AccountRepository;
+import com.webapp.staffmanager.constant.Gender;
+import com.webapp.staffmanager.constant.StaffStatus;
 import com.webapp.staffmanager.exception.GeneralException;
 import com.webapp.staffmanager.staff.entity.Staff;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
 import com.webapp.staffmanager.staff.entity.dto.StaffDetailDto;
 import com.webapp.staffmanager.staff.entity.mapper.StaffMapper;
 import com.webapp.staffmanager.staff.repository.StaffRepository;
+import com.webapp.staffmanager.staff.repository.StaffSpecifications;
 import com.webapp.staffmanager.staff.service.StaffService;
+import com.webapp.staffmanager.util.PageResponseDto;
 
+import io.jsonwebtoken.lang.Arrays;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +39,7 @@ public class StaffServiceImpl implements StaffService {
     private final AttendanceRepository attendanceRepository;
     private final StaffRepository staffRepository;
     private final StaffMapper staffMapper;
+    private final AccountRepository accountRepository;
 
     @Override
     public List<Staff> getStaffList() {
@@ -37,11 +47,27 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public Page<Staff> getPage(int pageNumber, int pageSize) {
+    public PageResponseDto<Staff> getPage(int pageNumber, int pageSize, String term) {
         Pageable sortedPageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").ascending());
 
-        // Page<Staff> staffPage = staffRepository.findByNameContaining("laptop", sortedPageable);
-        return staffRepository.findAll(sortedPageable);
+        Specification<Staff> spec;
+        if (term != null && !term.isEmpty()) {
+            spec = StaffSpecifications.hasAccount(term);
+        } else {
+            spec = StaffSpecifications.hasAccount();
+        }
+        Page<Staff> staffPage = staffRepository.findAll(spec,sortedPageable);
+        // Page<Staff> staffPage = staffRepository.findAll(sortedPageable);
+        // return staffPage;
+        // return staffRepository.findAll(sortedPageable);
+        return new PageResponseDto<Staff>(
+            staffPage.getContent(),
+            staffPage.getNumber(),
+            staffPage.getSize(),
+            staffPage.getTotalElements(),
+            staffPage.getTotalPages(),
+            staffPage.isLast()
+        );
     }
 
     @Override
@@ -126,5 +152,25 @@ public class StaffServiceImpl implements StaffService {
     public Staff findById(int id) {
         return staffRepository.findById(id)
                 .orElseThrow(() -> new GeneralException(APP_404_STAFF));
+    }
+
+    @Override
+    public List<StaffStatus> getStaffStatusList() {
+        return Arrays.asList(StaffStatus.values());
+    }
+
+    @Override
+    public List<Gender> getGenderList() {
+        return Arrays.asList(Gender.values());
+    }
+
+    @Override
+    public Staff saveToDb(Staff staff) {
+        return staffRepository.save(staff);
+    }
+
+    @Override
+    public Account findAccountByStaffId(int id) {
+        return accountRepository.findByStaffId(id).orElse(null);
     }
 }
