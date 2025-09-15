@@ -37,7 +37,7 @@ public class Attendance {
     private LocalDate workDate;
     @Column(name = "attendance_status")
     @Enumerated(EnumType.STRING)
-    private AttendanceStatus status;
+    private AttendanceStatus attendanceStatus;
     private BigDecimal totalHours;
 
     private LocalTime checkInTime;

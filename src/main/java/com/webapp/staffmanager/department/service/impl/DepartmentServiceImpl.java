@@ -3,6 +3,7 @@ package com.webapp.staffmanager.department.service.impl;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.webapp.staffmanager.department.entity.Department;
 import com.webapp.staffmanager.department.entity.dto.DepartmentAddRequestDto;
@@ -11,7 +12,6 @@ import com.webapp.staffmanager.department.repository.DepartmentRepository;
 import com.webapp.staffmanager.department.service.DepartmentService;
 import com.webapp.staffmanager.exception.GeneralException;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,6 +33,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         departmentRepository.save(toAdd);
     }
 
+    @Transactional
     @Override
     public void deleteDepartment(int id) {
         var toDelete = departmentRepository.findById(id)

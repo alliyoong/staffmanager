@@ -6,6 +6,8 @@ public enum AppResponseStatus {
     APP_204("APP-204"),
     APP_500("APP-500"),
     APP_400("APP-400"),
+    APP_401("APP-401"),
+
     APP_400_CHECKIN("APP-400-CHECKIN"),
     APP_400_CHECKOUT("APP-400-CHECKOUT"),
     APP_400_FIELD("APP-400-FIELD"),

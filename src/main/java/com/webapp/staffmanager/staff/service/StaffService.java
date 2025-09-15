@@ -5,7 +5,8 @@ import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 
-import com.webapp.staffmanager.authentication.entity.Account;
+import com.webapp.staffmanager.account.entity.Account;
+import com.webapp.staffmanager.account.entity.dto.AccountViewDto;
 import com.webapp.staffmanager.constant.Gender;
 import com.webapp.staffmanager.constant.StaffStatus;
 import com.webapp.staffmanager.staff.entity.Staff;
@@ -15,7 +16,7 @@ import com.webapp.staffmanager.util.PageResponseDto;
 
 public interface StaffService {
     List<Staff> getStaffList();
-    PageResponseDto<Staff> getPage(int pageNumber, int pageSize, String searchTerm);
+    PageResponseDto<StaffDetailDto> getPage(int pageNumber, int pageSize, String searchTerm);
     // Page<Staff> getPage(int pageNumber, int pageSize);
     void addStaff(StaffAddRequestDto dto);
     void deleteStaff(int id);
@@ -26,7 +27,7 @@ public interface StaffService {
     // String translate(Locale locale);
     List<StaffStatus> getStaffStatusList();
     List<Gender> getGenderList();
-    Account findAccountByStaffId(int id);
+    // AccountViewDto findAccountByStaffId(int id);
     
     // bulk add data for testing purpose right now
     void saveList(List<StaffAddRequestDto> dtoList);

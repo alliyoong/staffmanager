@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import com.webapp.staffmanager.authentication.service.JwtTokenService;
+import com.webapp.staffmanager.constant.AttendanceRequestStatus;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -49,7 +50,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 String token = authHeader.substring(TOKEN_PREFIX.length()).trim();
                 // log.info("TOKEN: {}", token);
                 if (jwt.isValid(token)
-                        && SecurityContextHolder.getContext().getAuthentication() == null) {
+                        && SecurityContextHolder.getContext().getAuthentication() == null
+                        && !jwt.isTokenBlackListed(token)) {
                     Authentication authentication = jwt.getAuthentication(token);
 
                     var newContext = SecurityContextHolder.createEmptyContext();

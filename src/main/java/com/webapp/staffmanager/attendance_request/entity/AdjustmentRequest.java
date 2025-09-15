@@ -22,7 +22,7 @@ public class AdjustmentRequest {
     private String reason;
     
     @MapsId
-    @OneToOne(mappedBy = "adjustmentRequest")
+    @OneToOne
     @JoinColumn(name = "request_id")
     private AttendanceRequest attendanceRequest;
 }

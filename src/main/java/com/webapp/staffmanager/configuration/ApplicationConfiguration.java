@@ -19,9 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.i18n.AcceptHeaderLocaleResolver;
 
-import com.webapp.staffmanager.authentication.entity.Account;
+import com.webapp.staffmanager.account.entity.Account;
+import com.webapp.staffmanager.account.repository.AccountRepository;
 import com.webapp.staffmanager.authentication.entity.UserPrincipal;
-import com.webapp.staffmanager.authentication.repository.AccountRepository;
 import com.webapp.staffmanager.constant.AppResponseStatus;
 import com.webapp.staffmanager.constant.SecurityConstant;
 import com.webapp.staffmanager.exception.GeneralException;

@@ -82,7 +82,7 @@ public class GeneralExceptionHandler implements ErrorController {
     @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(JwtException.class)
     public HttpResponse tokenInvalidException(JwtException exception) {
-        return HttpResponse.error(AppResponseStatus.APP_404_ACCOUNT);
+        return HttpResponse.error(AppResponseStatus.APP_401);
     }
 
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

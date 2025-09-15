@@ -10,9 +10,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import com.webapp.staffmanager.account.entity.Account;
+import com.webapp.staffmanager.account.entity.dto.AccountViewDto;
+import com.webapp.staffmanager.account.entity.mapper.AccountMapper;
+import com.webapp.staffmanager.account.repository.AccountRepository;
+import com.webapp.staffmanager.account.service.AccountService;
 import com.webapp.staffmanager.attendance.repository.AttendanceRepository;
-import com.webapp.staffmanager.authentication.entity.Account;
-import com.webapp.staffmanager.authentication.repository.AccountRepository;
 import com.webapp.staffmanager.constant.Gender;
 import com.webapp.staffmanager.constant.StaffStatus;
 import com.webapp.staffmanager.exception.GeneralException;
@@ -39,7 +42,7 @@ public class StaffServiceImpl implements StaffService {
     private final AttendanceRepository attendanceRepository;
     private final StaffRepository staffRepository;
     private final StaffMapper staffMapper;
-    private final AccountRepository accountRepository;
+    // private final AccountService accountService;
 
     @Override
     public List<Staff> getStaffList() {
@@ -47,8 +50,8 @@ public class StaffServiceImpl implements StaffService {
     }
 
     @Override
-    public PageResponseDto<Staff> getPage(int pageNumber, int pageSize, String term) {
-        Pageable sortedPageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").ascending());
+    public PageResponseDto<StaffDetailDto> getPage(int pageNumber, int pageSize, String term) {
+        Pageable sortedPageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
 
         Specification<Staff> spec;
         if (term != null && !term.isEmpty()) {
@@ -56,18 +59,17 @@ public class StaffServiceImpl implements StaffService {
         } else {
             spec = StaffSpecifications.hasAccount();
         }
-        Page<Staff> staffPage = staffRepository.findAll(spec,sortedPageable);
-        // Page<Staff> staffPage = staffRepository.findAll(sortedPageable);
-        // return staffPage;
-        // return staffRepository.findAll(sortedPageable);
-        return new PageResponseDto<Staff>(
-            staffPage.getContent(),
-            staffPage.getNumber(),
-            staffPage.getSize(),
-            staffPage.getTotalElements(),
-            staffPage.getTotalPages(),
-            staffPage.isLast()
-        );
+        Page<Staff> staffPage = staffRepository.findAll(spec, sortedPageable);
+        var staffDtos = staffPage.getContent().stream()
+                .map(staffMapper::fromStaff)
+                .toList();
+        return new PageResponseDto<StaffDetailDto>(
+                staffDtos,
+                staffPage.getNumber(),
+                staffPage.getSize(),
+                staffPage.getTotalElements(),
+                staffPage.getTotalPages(),
+                staffPage.isLast());
     }
 
     @Override
@@ -169,8 +171,8 @@ public class StaffServiceImpl implements StaffService {
         return staffRepository.save(staff);
     }
 
-    @Override
-    public Account findAccountByStaffId(int id) {
-        return accountRepository.findByStaffId(id).orElse(null);
-    }
+    // @Override
+    // public AccountViewDto findAccountByStaffId(int id) {
+    //     return accountService.findAccountByStaffId(id);
+    // }
 }

@@ -5,10 +5,11 @@ import java.time.LocalDate;
 import org.hibernate.annotations.CreationTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.webapp.staffmanager.authentication.entity.Account;
+import com.webapp.staffmanager.account.entity.Account;
 import com.webapp.staffmanager.constant.Gender;
 import com.webapp.staffmanager.constant.StaffStatus;
 import com.webapp.staffmanager.department.entity.Department;
+import com.webapp.staffmanager.job_position.JobPosition;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -46,4 +47,10 @@ public class Staff {
     @OneToOne(mappedBy = "staff", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private Account account;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "job_position_id", referencedColumnName = "job_position_id")
+    @JsonManagedReference
+    private JobPosition jobPosition;
 }
+

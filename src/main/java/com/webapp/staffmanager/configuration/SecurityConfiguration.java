@@ -14,7 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.webapp.staffmanager.filter.JwtAuthenticationFilter;
@@ -38,7 +40,9 @@ public class SecurityConfiguration {
 
         @Bean
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-                http.csrf(csrf -> csrf.disable())
+                http
+                // .csrf(csrf -> csrf.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())) // for angular csrf
+                .csrf(csrf -> csrf.disable())
                                 // .cors(Customizer.withDefaults())
                                 // .cors(cors -> cors.disable())
                                 .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer.configurationSource(
@@ -47,9 +51,10 @@ public class SecurityConfiguration {
                                                         cors.setAllowedHeaders(List.of("*"));
                                                         cors.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE",
                                                                         "OPTIONS"));
-                                                        cors.setAllowedOrigins(List.of(frontEndUrl, "*"));
+                                                        cors.setAllowedOrigins(List.of(frontEndUrl));
                                                         cors.setExposedHeaders(List.of("Authorization",
                                                                         "Access-Control-Expose-Headers", "Jwt-Token"));
+                                                        cors.setAllowCredentials(true);
                                                         return cors;
                                                 }))
                                 .sessionManagement((session) -> session
@@ -59,24 +64,26 @@ public class SecurityConfiguration {
                                                 .anyRequest().authenticated())
                                 .anonymous(httpSecurityAnonymousConfigurer -> httpSecurityAnonymousConfigurer.disable())
                                 .authenticationProvider(authenticationProvider)
+                                .exceptionHandling((exception) -> exception
+                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                                 // .exceptionHandling((exception) -> exception
                                 // .authenticationEntryPoint(forbiddenEntryPoint)
                                 // .accessDeniedHandler(accessDeniedHandler))
-                                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                                .logout(logout -> logout
-                                                .logoutUrl("/api/auth/logout")
-                                                .addLogoutHandler((request, response, authentication) -> {
-                                                        SecurityContextHolder.clearContext();
-                                                })
-                                                .logoutSuccessHandler((request, response, authentication) -> {
-                                                        response.setStatus(HttpStatus.OK.value());
-                                                        response.setHeader(HttpHeaders.CONTENT_TYPE,
-                                                                        MediaType.APPLICATION_JSON_VALUE);
-                                                        response.getWriter().write(
-                                                                        "{\"message\":\"Logged out successfully\"}");
-                                                })
-                                                .invalidateHttpSession(true)
-                                                .clearAuthentication(true));
+                                // .logout(logout -> logout
+                                // .logoutUrl("/api/auth/logout")
+                                // .addLogoutHandler((request, response, authentication) -> {
+                                // SecurityContextHolder.clearContext();
+                                // })
+                                // .logoutSuccessHandler((request, response, authentication) -> {
+                                // response.setStatus(HttpStatus.OK.value());
+                                // response.setHeader(HttpHeaders.CONTENT_TYPE,
+                                // MediaType.APPLICATION_JSON_VALUE);
+                                // response.getWriter().write(
+                                // "{\"message\":\"Logged out successfully\"}");
+                                // })
+                                // .invalidateHttpSession(true)
+                                // .clearAuthentication(true))
+                                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
         }

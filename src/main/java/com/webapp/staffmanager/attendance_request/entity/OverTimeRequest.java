@@ -22,7 +22,7 @@ public class OverTimeRequest {
     private String reason;
     
     @MapsId
-    @OneToOne(mappedBy =  "overTimeRequest")
+    @OneToOne
     @JoinColumn(name = "request_id")
     private AttendanceRequest attendanceRequest;
 }

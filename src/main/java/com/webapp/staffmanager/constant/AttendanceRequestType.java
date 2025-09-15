@@ -1,5 +1,5 @@
 package com.webapp.staffmanager.constant;
 
-public enum RequestType {
+public enum AttendanceRequestType {
     ADJUSTMENT, DAY_OFF, OVERTIME;
 }

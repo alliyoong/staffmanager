@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.webapp.staffmanager.account.entity.Account;
 import com.webapp.staffmanager.constant.AccountStatus;
 
 public class UserPrincipal implements UserDetails{

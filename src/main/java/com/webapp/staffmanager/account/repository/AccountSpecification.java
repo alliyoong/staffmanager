@@ -1,8 +1,8 @@
-package com.webapp.staffmanager.authentication.repository;
+package com.webapp.staffmanager.account.repository;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import com.webapp.staffmanager.authentication.entity.Account;
+import com.webapp.staffmanager.account.entity.Account;
 
 import jakarta.persistence.criteria.JoinType;
 

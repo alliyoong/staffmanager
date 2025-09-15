@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto.OnCreate;
-import com.webapp.staffmanager.authentication.entity.dto.RegisterRequestDto;
+import com.webapp.staffmanager.account.entity.dto.RegisterRequestDto;
 import com.webapp.staffmanager.staff.entity.Staff;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto;
 import com.webapp.staffmanager.staff.entity.dto.StaffAddRequestDto.OnUpdate;
@@ -80,11 +80,11 @@ public class StaffRestController {
         return HttpResponse.noContent();
     }
     
-    @GetMapping("/check-has-account/{id}")
-    public HttpResponse checkHasAccount(@PathVariable int id) {
-        var result = service.findAccountByStaffId(id);
-        return HttpResponse.ok(result);
-    }
+    // @GetMapping("/check-has-account/{id}")
+    // public HttpResponse checkHasAccount(@PathVariable int id) {
+    //     var result = service.findAccountByStaffId(id);
+    //     return HttpResponse.ok(result);
+    // }
 
     // for testing purpose
     @PostMapping("/batch-insert")

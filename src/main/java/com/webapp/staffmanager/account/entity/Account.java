@@ -1,4 +1,4 @@
-package com.webapp.staffmanager.authentication.entity;
+package com.webapp.staffmanager.account.entity;
 
 import java.time.LocalDateTime;
 import org.hibernate.annotations.CreationTimestamp;

@@ -41,7 +41,7 @@ public class AttendanceServiceImpl implements AttendanceService {
     public Attendance getAttendance(int staffId) {
         var today = LocalDate.now();
         var attendance = attendanceRepository.findByStaffIdAndWorkDate(staffId, today)
-                .orElseThrow(() -> new GeneralException(APP_404_ATTENDANCE));
+                .orElse(null);
         return attendance;
     }
 
@@ -56,7 +56,7 @@ public class AttendanceServiceImpl implements AttendanceService {
 
         Attendance toAdd = new Attendance();
         toAdd.setStaff(target);
-        toAdd.setStatus(AttendanceStatus.REQUESTED);
+        toAdd.setAttendanceStatus(AttendanceStatus.REQUESTED);
         toAdd.setWorkDate(dateNow);
         toAdd.setCheckInTime(timeNow);
         attendanceRepository.save(toAdd);

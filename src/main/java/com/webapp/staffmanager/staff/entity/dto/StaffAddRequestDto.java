@@ -4,11 +4,9 @@ import java.time.LocalDate;
 
 import com.webapp.staffmanager.constant.Gender;
 import com.webapp.staffmanager.constant.StaffStatus;
-import com.webapp.staffmanager.util.validator.AppNotNull;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
@@ -28,7 +26,7 @@ public record StaffAddRequestDto(
     @NotNull(message = EMPTY_GENDER_ERROR_MSG, groups = OnUpdate.class) 
     Gender gender, 
     @NotNull(message = EMPTY_STATUS_ERROR_MSG, groups = OnUpdate.class) 
-    StaffStatus status, 
+    StaffStatus staffStatus, 
     @NotNull(message = EMPTY_DEPARTMENT_ERROR_MSG, groups = OnUpdate.class)  
     int departmentId, 
     LocalDate joinDate

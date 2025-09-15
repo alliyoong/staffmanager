@@ -22,12 +22,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.webapp.staffmanager.account.repository.AccountRepository;
 import com.webapp.staffmanager.authentication.entity.UserPrincipal;
-import com.webapp.staffmanager.authentication.repository.AccountRepository;
 import com.webapp.staffmanager.exception.GeneralException;
+import com.webapp.staffmanager.util.RedisService;
+
 import static com.webapp.staffmanager.constant.AppResponseStatus.*;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -41,6 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class JwtTokenService implements InitializingBean {
     private final AccountRepository accountRepository;
+    private final RedisService redisService;
 
     @Value("${security.jwt.secret}") // Base64-encoded secret (≥ 256 bits for HS256)
     private String base64Secret;
@@ -120,8 +124,30 @@ public class JwtTokenService implements InitializingBean {
         return getClaim(token, Claims::getSubject);
     }
 
+    public String getSubjectIgnoreExpiration(String token) {
+        try {
+            return parseClaims(token).getSubject();
+        } catch (ExpiredJwtException ex) {
+            return ex.getClaims().getSubject();
+        }
+    }
+
     public Date getExpiration(String token) {
         return getClaim(token, Claims::getExpiration);
+    }
+    
+    public void blackList(String token) {
+        Date expiration = getExpiration(token);
+        if (null == expiration) {
+            log.error("Token expiration is null");
+            return;
+        }
+        long ttl = expiration.getTime() - System.currentTimeMillis();
+        redisService.addToBlackList(token, ttl);
+    }
+    
+    public boolean isTokenBlackListed(String token) {
+        return redisService.isTokenBlackListed(token);
     }
 
     /** Quick validity check: signature, issuer, expiration, skew. */
@@ -134,17 +160,12 @@ public class JwtTokenService implements InitializingBean {
         }
     }
 
-    // =====================
-    // Spring Security glue
-    // =====================
-
     public Authentication getAuthentication(String token) {
         String username = getSubject(token);
         var account = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new GeneralException(APP_404_ACCOUNT));
         return new UsernamePasswordAuthenticationToken(new UserPrincipal(account), token, getAuthorities(token));
     }
-
 
     /** Extract bearer token from Authorization header. */
     // public Optional<String> resolveToken(HttpServletRequest request) {
